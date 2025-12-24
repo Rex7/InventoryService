@@ -3,13 +3,19 @@ package com.example.inventory;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.inventory.DTO.InventoryDTO;
+import com.example.inventory.DTO.RequestDTO;
 import com.example.inventory.service.InventoryService;
 
-@RequestMapping("/inventory-service")
+@RestController
+@RequestMapping("/inventory")
 public class InventoryController {
 	
 	@Autowired
@@ -18,9 +24,16 @@ public class InventoryController {
 	
 	
 	@PostMapping("/confirmAvailability")
-	public InventoryDTO checkStock(List<InventoryDTO> itemsList) {
+	public ResponseEntity<List<InventoryDTO>> checkStock(@RequestBody List<InventoryDTO> itemsList) {
 		List<InventoryDTO>  items=  inventoryService.checkStock(itemsList);
-		return null;
+		return ResponseEntity.status(HttpStatus.OK).body(items);
+	}
+	
+	
+	@PostMapping("/reservceStock")
+	public ResponseEntity<List<String>> reserveStock(@RequestBody List<RequestDTO> itemsList) {
+		List<String>  items=  inventoryService.reservceStock(itemsList);
+		return ResponseEntity.status(HttpStatus.OK).body(items);
 	}
 
 }
